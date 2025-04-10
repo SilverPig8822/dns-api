@@ -3,18 +3,35 @@ import json
 import numpy as np
 import dns.resolver
 import dns.rdatatype
+from tensorflow.keras.layers import InputLayer as OriginalInputLayer
 from tensorflow.keras.models import load_model
 from sentence_transformers import SentenceTransformer
 import os
 
 app = Flask(__name__)
 
+# 1. Define a custom InputLayer
+class CustomInputLayer(OriginalInputLayer):
+    def __init__(self, *args, **kwargs):
+        # If 'batch_shape' is in the keyword arguments, rename it
+        if 'batch_shape' in kwargs:
+            kwargs['batch_input_shape'] = kwargs.pop('batch_shape')
+        super().__init__(*args, **kwargs)
+
+
+
 # Load the CNN phishing detection model.
 # Make sure that 'new_st2_model.h5' is in the same directory or update the path accordingly.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "new_st2_model.h5")
-model = load_model(MODEL_PATH)
-model.summary()  # Optional: print the model summary
+
+# 2. Load your model with the custom_objects argument
+model = load_model(
+    MODEL_PATH,
+    custom_objects={'InputLayer': CustomInputLayer}
+)
+
+model.summary()  # Optional: confirm model structure
 
 # Load the SentenceTransformer model.
 st_model = SentenceTransformer("all-MiniLM-L6-v2")
