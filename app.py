@@ -12,7 +12,7 @@ app = Flask(__name__)
 # Load the CNN phishing detection model.
 # Make sure that 'new_st2_model.h5' is in the same directory or update the path accordingly.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "new_st2_model.h5")
+MODEL_PATH = os.path.join(BASE_DIR, "model.keras")
 model = load_model(MODEL_PATH)
 model.summary()  # Optional: print the model summary
 
