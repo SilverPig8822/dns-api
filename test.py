@@ -8,17 +8,17 @@ from sentence_transformers import SentenceTransformer
 import os
 import tensorflow
 
+
 app = Flask(__name__)
 
 # Load the CNN phishing detection model.
 # Make sure that 'new_st2_model.h5' is in the same directory or update the path accordingly.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "new_st2_model.h5")
+MODEL_PATH = os.path.join(BASE_DIR, "model.keras")
 model = load_model(MODEL_PATH)
 model.summary()  # Optional: print the model summary
 
 converter = tensorflow.lite.TFLiteConverter.from_saved_model(model)
 tflite_model = converter.convert()
 
-with open("model.tflite", "wb") as f:
-    f.write(tflite_model)
+open ("model.tflite" , "wb") .write(tflite_model)
